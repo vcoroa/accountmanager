@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    hostname: postgres
+    networks:
+      - net_backend
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: account_manager_db
+    volumes:
+      - ./docker/data:/var/lib/postgresql/data
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - net_backend
+networks:
+  net_backend:
