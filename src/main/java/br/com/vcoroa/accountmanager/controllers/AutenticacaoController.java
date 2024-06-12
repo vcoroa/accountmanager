@@ -6,6 +6,10 @@ import br.com.vcoroa.accountmanager.response.LoginResponse;
 import br.com.vcoroa.accountmanager.response.UsuarioResponse;
 import br.com.vcoroa.accountmanager.services.AutenticacaoService;
 import br.com.vcoroa.accountmanager.services.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/autenticacao")
+@Tag(name = "Autenticação", description = "API para gerenciamento e autenticação de usuários")
 public class AutenticacaoController {
 
     private final JwtService jwtService;
@@ -34,12 +39,21 @@ public class AutenticacaoController {
         this.authenticationManager = authenticationManager;
     }
 
+    @Operation(summary = "Registra um novo usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Solicitação inválida")})
     @PostMapping("/registrar")
     public ResponseEntity<UsuarioResponse> registrar(@RequestBody UsuarioDto usuarioDto) {
         UsuarioResponse usuarioCriado = autenticacaoService.registrar(usuarioDto);
         return new ResponseEntity<>(usuarioCriado, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Autentica um usuário existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Solicitação inválida"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")})
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody UsuarioDto usuarioDto) {
         Authentication authentication = authenticationManager.authenticate(
