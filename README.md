@@ -11,6 +11,7 @@ Este é um projeto para implementar uma API REST para um sistema de gerenciament
 - Autenticação com Spring Security e JWT
 - Domain Driven Design
 - Flyway
+- OpenAPI
 - JPA
 
 ## Funcionalidades
@@ -35,13 +36,9 @@ Este é um projeto para implementar uma API REST para um sistema de gerenciament
 1. Navegue até a pasta do projeto.
 2. Execute o comando mvn test para executar os testes unitários.
 
-## Como Contribuir
+## OpenAPI/Swagger
 
-1. Faça um fork do projeto.
-2. Crie uma nova branch com as suas alterações.
-3. Faça um commit das suas alterações.
-4. Faça um push para a sua branch.
-5. Envie um pull request a partir da sua branch.
+Este projeto utiliza o OpenAPI/Swagger para documentação da API. A documentação da API pode ser acessada navegando até `http://localhost:8080/swagger-ui/index.html` quando a aplicação está em execução.
 
 ## API Endpoints
 
@@ -50,59 +47,79 @@ Este é um projeto para implementar uma API REST para um sistema de gerenciament
 Primeiro, você precisa se registrar na API usando o endpoint de registro. Após o registro, você pode fazer login na API usando o endpoint de login. O token retornado pelo endpoint de login será necessário para autenticar as solicitações subsequentes.
 
 - Registrar
+  ```curl
   curl --request POST \
     --url http://localhost:8080/api/autenticacao/registrar \
     --header 'Content-Type: application/json' \
     --data '{ "username": "<username>", "password": "<password>" }'
+  ```
 
 - Login
+  ```curl
   curl --request POST \
     --url http://localhost:8080/api/autenticacao/login \
     --header 'Content-Type: application/json' \
     --data '{ "username": "<username>", "password": "<password>" }'
+  ```
 
 ### Contas
 
 - Criar Conta
+  ```curl
   curl --request POST \
     --url http://localhost:8080/api/contas \
     --header 'Content-Type: application/json' \
     --header 'Authentication: Bearer <token>' \
     --data '{ "dataVencimento": "<date>", "dataPagamento": "<date>", "valor": <value>, "descricao": "<description>", "situacao": "<status>", "tipo": <type> }'
+  ```
 
 - Atualizar Conta
+  ```curl
   curl --request PUT \
     --url http://localhost:8080/api/contas/<id> \
     --header 'Content-Type: application/json' \
     --data '{ "dataVencimento": "<date>", "dataPagamento": "<date>", "valor": <value>, "descricao": "<description>", "situacao": "<status>", "tipo": <type> }'
+  ```
 
 - Alterar Situação da Conta
+  ```curl
   curl --request PATCH \
     --url http://localhost:8080/api/contas/<id>/situacao \
     --header 'Content-Type: application/json' \
     --data '"<status>"'
+  ```
 
 - Obter Lista de Contas
+  ```curl
   curl --request GET \
     --url 'http://localhost:8080/api/contas?page=<page>&size=<size>' \
     --header 'Authentication: Bearer <token>'
+  ```
 
 - Obter Lista de Contas com Filtro
+  ```curl
   curl --request GET \
     --url 'http://localhost:8080/api/contas?dataVencimento=<date>' \
     --header 'Authentication: Bearer <token>'
+  ```
 
 - Obter Conta por ID
+  ```curl
   curl --request GET \
     --url http://localhost:8080/api/contas/<id>
+  ```
 
 - Obter Valor Total Pago por Período
+  ```curl
   curl --request GET \
     --url 'http://localhost:8080/api/contas/valor-total-pago?inicio=<start_date>&fim=<end_date>' \
     --header 'Authentication: Bearer <token>'
+  ```
 
 - Importar CSV
+  ```curl
   curl --request POST \
-    --url http://localhost:8080/api/contas/importar \
-    --header 'Authentication: Bearer <token>' \
-    --form 'file=@<file_path>'
+  --url http://localhost:8080/api/contas/importar \
+  --header 'Authentication: Bearer <token>' \
+  --form 'file=@<file_path>'
+  ```
